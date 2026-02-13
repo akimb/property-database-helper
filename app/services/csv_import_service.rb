@@ -27,7 +27,7 @@ class CsvImportService
         city: city,
         state: state,
         zip_code: zip_code,
-        zip_valid: valid_zip?(zip_code, state)
+        zip_valid: self.class.valid_zip?(zip_code, state)
       }
 
       properties[property_name][:units] << unit_number unless unit_number.nil? || unit_number.empty?
