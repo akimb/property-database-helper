@@ -1053,8 +1053,21 @@ class CsvParserService
       "831"
     ]
   }.freeze
+
   def clean_information(word, up=false) # uppercase + remove non alphanumeric characters
     return nil if word.nil?
     cleaned = word.gsub(/[^A-Za-z0-9\s]/, '')
     up ? cleaned.upcase : cleaned
   end
+
+  def valid_zip?(zip_prefix, check_state)
+    return false if check_state.nil? # if no state, return warning
+
+    prefix = STATE_ZIP_PREFIXES[check_state.upcase] # get all available zip prefixes for state
+
+    return false if prefix.nil?
+
+    prefix.any? { |p| zip_prefix.to_s.start_with?(p) } # check if zip code aligns with state
+  end
+
+end
