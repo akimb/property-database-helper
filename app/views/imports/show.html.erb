@@ -1,0 +1,13 @@
+<h1>Property Preview</h1>
+<p>File: <%= @import.filename %></p>
+
+<div class="scrollable-container">
+    <% @parsed.each do |property| %>
+        <%= render "property_card", property: property, import: @import %>
+    <% end %>
+</div>
+
+<hr>
+<%= link_to 'Add Property', nil %>
+<br><br>
+<%= link_to 'Submit Final', nil %>

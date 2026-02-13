@@ -1,0 +1,21 @@
+<div>
+    <hr>
+    <h2><%= property[:name] %></h2>
+    <p>Address: <%= property[:street_address] %></p>
+    <p>City: <%= property[:city] %></p>
+    <p>State: <%= property[:state] %></p>
+    <p>
+        Zip Code: <%= property[:zip_code] %>
+        <% if property[:zip_valid] == false %>
+            <span style="color: red;">&#9888; Invalid zip code for <%= property[:state] %></span>
+        <% end %>
+    </p>
+    <% if property[:units].any? %>
+        <p>Units: <%= property[:units].join(", ") %></p>
+    <% else %>
+        <p> Units: N/A </p>
+    <% end %>
+    <%= link_to 'Edit Property', edit_import_path(import, property_name: property[:name]), method: :get %>
+    <br>
+    <%= link_to 'Delete Property', nil %>
+</div>
