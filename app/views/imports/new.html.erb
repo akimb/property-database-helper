@@ -1,0 +1,12 @@
+<h1>Import Property Data</h1>
+
+<%= form_with url: imports_path, multipart: true do |f| %>
+    <div>
+        <%= f.label :file, "Upload CSV" %>
+        <%= f.file_field :file %>
+    </div>
+
+    <div>
+        <%= f.submit "Upload" %>
+    </div>
+<% end %>
