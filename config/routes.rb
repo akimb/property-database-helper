@@ -3,7 +3,10 @@ Rails.application.routes.draw do
 
   resources :imports, only: [:new, :create, :show, :edit, :destroy, :update] do
     member do
-      post :confirm
+      # post :confirm
+      get :new_property
+      post :create_property
+
     end
   end
 
