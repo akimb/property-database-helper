@@ -2,7 +2,7 @@
 <p>File: <%= @import.filename %></p>
 
 <div class="scrollable-container">
-    <% @parsed.each do |property| %>
+    <% @import.imported_properties.each do |property| %>
         <%= render "property_card", property: property, import: @import %>
     <% end %>
 </div>

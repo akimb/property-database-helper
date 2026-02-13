@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_031933) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_12_040000) do
+  create_table "imported_properties", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "city"
+    t.datetime "created_at", null: false
+    t.bigint "import_id", null: false
+    t.string "name", null: false
+    t.string "state"
+    t.string "street_address"
+    t.json "units"
+    t.datetime "updated_at", null: false
+    t.string "zip_code"
+    t.boolean "zip_valid", default: false
+    t.index ["import_id"], name: "index_imported_properties_on_import_id"
+  end
+
   create_table "imports", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "filename"
@@ -35,5 +49,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_031933) do
     t.index ["property_id"], name: "index_units_on_property_id"
   end
 
+  add_foreign_key "imported_properties", "imports"
   add_foreign_key "units", "properties"
 end

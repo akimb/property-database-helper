@@ -1,21 +1,24 @@
 <div>
     <hr>
-    <h2><%= property[:name] %></h2>
-    <p>Address: <%= property[:street_address] %></p>
-    <p>City: <%= property[:city] %></p>
-    <p>State: <%= property[:state] %></p>
+    <!-- REFACTORED: property is now an ImportedProperty record, not a hash -->
+    <!-- Use .field syntax instead of [:field] to access attributes -->
+    <h2><%= property.name %></h2>
+    <p>Address: <%= property.street_address %></p>
+    <p>City: <%= property.city %></p>
+    <p>State: <%= property.state %></p>
     <p>
-        Zip Code: <%= property[:zip_code] %>
-        <% if property[:zip_valid] == false %>
-            <span style="color: red;">&#9888; Invalid zip code for <%= property[:state] %></span>
+        Zip Code: <%= property.zip_code %>
+        <% if property.zip_valid == false %>
+            <span style="color: red;">&#9888; Invalid zip code for <%= property.state %></span>
         <% end %>
     </p>
-    <% if property[:units].any? %>
-        <p>Units: <%= property[:units].join(", ") %></p>
+    <!-- REFACTORED: units is now a JSON array stored on the model -->
+    <% if property.units.any? %>
+        <p>Units: <%= property.units.join(", ") %></p>
     <% else %>
         <p> Units: N/A </p>
     <% end %>
-    <%= link_to 'Edit Property', edit_import_path(import, property_name: property[:name]), method: :get %>
+    <%= link_to 'Edit Property', edit_import_path(import, property_name: property.name), method: :get %>
     <br>
-    <%= link_to 'Delete Property', nil %>
+    <%= link_to 'Delete Property', import_path(import, property_name: property.name), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete  #{property.name}?" } %>
 </div>
