@@ -1,0 +1,43 @@
+<h1>Editing Property <%= @property[:name] %></h1>
+
+<div>
+    <%= form_with url: import_path(@import, property_name: @property[:name]), method: :patch do |form| %>
+        <div>
+            <%= form.label :name, 'Property Name:' %>
+            <%= form.text_field :name, value: @property[:name] %>
+        </div>
+
+        <div>
+            <%= form.label :street_address, 'Address:' %>
+            <%= form.text_field :street_address, value: @property[:street_address] %>
+        </div>
+
+        <div>
+            <%= form.label :city, 'City:' %>
+            <%= form.text_field :city, value: @property[:city] %>
+        </div>
+
+        <div>
+            <%= form.label :state, 'State:' %>
+            <%= form.text_field :state, value: @property[:state] %>
+        </div>
+
+        <div>
+            <%= form.label :zip_code, 'Zip Code:' %>
+            <%= form.text_field :zip_code, value: @property[:zip_code] %>
+        </div>
+
+        <div>
+            <label>Units:</label>
+            <% @property[:units].each_with_index do |unit, index| %>
+                <%= text_field_tag "units[]", unit %>
+                <%= link_to "Remove", "#", class: "remove-unit" %>
+                <br>
+            <% end %>
+        </div>
+
+        <%= form.submit "Save Changes" %>
+    <% end %>
+</div>
+
+<%= link_to "Back to Preview", import_path %>
