@@ -33,6 +33,9 @@ class CsvParserService
 
     properties.values
   end
+
+  private 
+
   STATE_ZIP_PREFIXES = {
     "ALASKA" => [
       "995",
