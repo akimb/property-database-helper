@@ -1,18 +1,41 @@
 <div>
     <hr>
-    <!-- REFACTORED: property is now an ImportedProperty record, not a hash -->
-    <!-- Use .field syntax instead of [:field] to access attributes -->
     <h2><%= property.name %></h2>
-    <p>Address: <%= property.street_address %></p>
-    <p>City: <%= property.city %></p>
-    <p>State: <%= property.state %></p>
-    <p>
-        Zip Code: <%= property.zip_code %>
-        <% if property.zip_valid == false %>
-            <span style="color: red;">&#9888; Invalid zip code for <%= property.state %></span>
+
+    <p>Address: 
+    <% if property.street_address == "" %>
+        <span style="color: red;">&#9888; No street address information!</span>
+    <% else %>
+        <%= property.street_address %>
+    <% end %>
+    </p>
+    
+    <p>City: 
+        <% if property.city == "" %>
+            <span style="color: red;">&#9888; No city information!</span>
+        <% else %>
+            <%= property.city %>
         <% end %>
     </p>
-    <!-- REFACTORED: units is now a JSON array stored on the model -->
+
+    <p>State:
+        <% if property.state == "" %>
+            <span style="color: red;">&#9888; No state information!</span>
+        <% else %>
+            <%= property.state %>
+        <% end %>
+    </p>
+
+    <p>Zip Code: 
+        <% if property.zip_code == "" %>
+            <span style="color: red;">&#9888; No zipcode information!</span>
+        <% elsif property.zip_valid == false && property.state == "" %>
+            <span style="color: red;">&#9888; Invalid zip code for <%= property.state %></span>
+        <% else %>
+            <%= property.zip_code %>
+        <% end %>
+    </p>
+
     <% if property.units.any? %>
         <p>Units: <%= property.units.join(", ") %></p>
     <% else %>
@@ -20,5 +43,5 @@
     <% end %>
     <%= link_to 'Edit Property', edit_import_path(import, property_name: property.name), method: :get %>
     <br>
-    <%= link_to 'Delete Property', import_path(import, property_name: property.name), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete  #{property.name}?" } %>
+    <%= button_to 'Delete Property', import_path(import, property_name: property.name), method: :delete %>
 </div>
