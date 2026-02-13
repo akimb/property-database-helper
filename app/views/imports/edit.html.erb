@@ -25,7 +25,7 @@
 
         <div>
             <%= form.label :zip_code, 'Zip Code:' %>
-            <%= form.text_field :zip_code, value: @property.zip_code %>
+            <%= form.text_field :zip_code, data: { numeric: true}, value: @property.zip_code %>
         </div>
 
         <div>
