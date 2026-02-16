@@ -1,8 +1,17 @@
 <!-- @property uses Imported Property, not a hash -->
-<h1>Editing Property <%= @property.name %></h1>
+<h1>Editing Property: <%= @property.name %></h1>
 
 <div>
-    <%= form_with url: import_path(@import, property_name: @property.name), method: :patch do |form| %>
+    <%= form_with url: edit_import_path(@import), method: :get do |f| %>
+        <%= f.hidden_field :property_name, value: params[:property_name] %>
+        <%= f.number_field :unit_count, min: 0, value: params[:unit_count] || 0 %>
+        <%= f.submit "Add Units" %>
+    <% end %>
+</div>
+
+<div>
+    <%= form_with url: import_path(@import), method: :patch do |form| %>
+        <%= form.hidden_field :property_name, value: @property.name %>
         <div>
             <%= form.label :name, 'Property Name:' %>
             <%= form.text_field :name, value: @property.name %>
@@ -20,7 +29,7 @@
 
         <div>
             <%= form.label :state, 'State:' %>
-            <%= form.text_field :state, value: @property.state %>
+            <%= form.select :state, ZIP_PREFIXES.keys, selected: @property.state %>
         </div>
 
         <div>
@@ -28,18 +37,14 @@
             <%= form.text_field :zip_code, data: { numeric: true}, value: @property.zip_code %>
         </div>
 
-        <div>
-            <!-- units is now in a json array -->
-            <label>Units:</label>
-            <% @property.units.each_with_index do |unit, index| %>
-                <%= text_field_tag "units[]", unit %>
-                <%= link_to "Remove", "#", class: "remove-unit" %>
-                <br>
-            <% end %>
+        <br>
+        <label>Edit units by typing in the text field, or check them to delete.</label>
+        <div class="unit-container">   
+            <%= render "unit_fields" %>
         </div>
-
         <%= form.submit "Save Changes" %>
     <% end %>
 </div>
+
 <br>
-<%= link_to "Back to Preview", import_path %>
+<%= link_to "Back to Preview", import_path(@import) %>
