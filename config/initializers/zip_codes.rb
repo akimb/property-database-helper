@@ -1,0 +1,1 @@
+ZIP_PREFIXES = YAML.load_file(Rails.root.join("config", "state_zip_prefixes.yml")).freeze
