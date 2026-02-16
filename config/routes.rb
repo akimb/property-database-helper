@@ -6,7 +6,6 @@ Rails.application.routes.draw do
       # post :confirm
       get :new_property
       post :create_property
-
     end
     
     resources :units, only: [:new, :create, :destroy]

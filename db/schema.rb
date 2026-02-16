@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_040000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_15_001055) do
   create_table "imported_properties", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "city"
     t.datetime "created_at", null: false
@@ -43,12 +43,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_040000) do
 
   create_table "units", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.bigint "property_id", null: false
+    t.bigint "imported_property_id"
+    t.bigint "property_id"
     t.string "unit_number"
     t.datetime "updated_at", null: false
+    t.index ["imported_property_id"], name: "fk_rails_cd4469ef0f"
     t.index ["property_id"], name: "index_units_on_property_id"
   end
 
   add_foreign_key "imported_properties", "imports"
+  add_foreign_key "units", "imported_properties"
   add_foreign_key "units", "properties"
 end
