@@ -1,4 +1,6 @@
 class ImportsController < ApplicationController
+  include TextCleaner
+
   def new
   end
 
@@ -26,9 +28,6 @@ class ImportsController < ApplicationController
     @import = Import.find(params[:id])
   end
 
-  # def confirm
-
-  # end
 
   def new_property
     @import = Import.find(params[:id])
@@ -39,8 +38,21 @@ class ImportsController < ApplicationController
     @import = Import.find(params[:id])
     @property = @import.imported_properties.new(imported_property_params)
     @property.zip_valid = CsvImportService.valid_zip?(params[:zip_code], params[:state])
-    
+        
     if @property.save
+      
+      @property.update!(
+        name: clean_information(params[:name], true),
+        street_address: clean_information(params[:street_address], true),
+        city: clean_information(params[:city], true)
+      )
+      if params[:units].present?
+        params[:units].each do |_, unit_params|
+          unit_number = unit_params[:unit_number].strip
+          @property.units.create!(unit_number: unit_number) unless unit_number.empty?
+        end
+      end
+
       redirect_to import_path(@import)
     else
       render :new_property
@@ -61,18 +73,44 @@ class ImportsController < ApplicationController
     # The specific property is found, then uses the update! method via Rails
     # to persist changes to the database.
     # ---------------------------------------------------------------------------------
+    # Rails.logger.debug params.inspect
+    # render plain: params.inspect
+
     @import = Import.find(params[:id])
     @property = @import.imported_properties.find_by!(name: params[:property_name])
 
+    if params[:delete_units].present?
+      params[:delete_units].each do |unit_id|
+        unit = Unit.find_by(id: unit_id)
+        unit&.destroy
+      end
+    end
+
     @property.update!(
-      name: params[:name],
-      street_address: params[:street_address],
-      city: params[:city],
-      state: params[:state],
+      name: clean_information(params[:name], true),
+      street_address: clean_information(params[:street_address], true),
+      city: clean_information(params[:city], true),
+      state: clean_information(params[:state], true),
       zip_code: params[:zip_code],
       zip_valid: CsvImportService.valid_zip?(params[:zip_code], params[:state])
     )
+    
+    if params[:units].present?
+      deleted_ids = params[:delete_units]&.map(&:to_s) || []
+      params[:units].each do |id, unit_params|
+        next if deleted_ids.include?(id.to_s)
+        unit_number = unit_params[:unit_number].to_s.strip
+                
+        next if unit_number.blank?
 
+        if id.start_with?("new_")
+          @property.units.create!(unit_number: unit_number)
+        else
+          unit = Unit.find_by(id: id)
+          unit.update!(unit_number: unit_number)
+        end
+      end
+    end
     redirect_to import_path(@import)
   end
 
@@ -93,6 +131,7 @@ class ImportsController < ApplicationController
 
   def imported_property_params
     # params.require(:imported_property).permit(:name, :street_address, :city, :state, :zip_code, units: [])
-    params.permit(:name, :street_address, :city, :state, :zip_code, units: [])
+    params.permit(:name, :street_address, :city, :state, :zip_code)
   end
+
 end
