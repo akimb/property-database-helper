@@ -1,37 +1,59 @@
 <h1>Add New Property</h1>
 
 <div>
-    <%= form_with url: create_property_import_path(@import, property_name: @property.name), method: :post do |f| %>
-        <div>
-            <%= f.label :name, "Property Name: " %>
-            <%= f.text_field :name %>
-        </div>
-
-        <div>
-            <%= f.label :street_address, "Street Address: " %>
-            <%= f.text_field :street_address %>
-        </div>
-
-        <div>
-            <%= f.label :city, "City: " %>
-            <%= f.text_field :city %>
-        </div>
-
-        <div>
-            <%= f.label :state, "State: " %>
-            <%= f.text_field :state %>
-        </div>
-
-        <div>
-            <%= f.label :zip_code, "Zip Code: " %>
-            <%= f.text_field :zip_code, data: { numeric: true} %>
-        </div>
-
-        <div>
-            <%= f.label :units_string, "Units (comma-separated)" %>
-            <%= f.text_field :units_string %>
-        </div>
-
-        <%= f.submit "Add Property" %>
+    <%= form_with url: new_property_import_path(@import), method: :get do |unit| %>
+        <%= unit.label :unit_count, "Add # of Units: " %>
+        <%= unit.number_field :unit_count, min: 0, value: params[:unit_count] || 0 %>
+        <%= unit.submit "Add Units" %>
     <% end %>
-<%= link_to 'Back', import_path(@import) %>
+</div>
+
+<hr>
+
+<div>
+    <%= form_with url: create_property_import_path(@import), method: :post do |form| %>
+        <div>
+            <%= form.label :name, "Property Name: " %>
+            <%= form.text_field :name %>
+        </div>
+
+        <div>
+            <%= form.label :street_address, "Street Address: " %>
+            <%= form.text_field :street_address %>
+        </div>
+
+        <div>
+            <%= form.label :city, "City: " %>
+            <%= form.text_field :city %>
+        </div>
+
+        <div>
+            <%= form.label :state, "State: " %>
+            <%= form.select :state, ZIP_PREFIXES.keys %>
+        </div>
+
+        <div>
+            <%= form.label :zip_code, "Zip Code: " %>
+            <%= form.text_field :zip_code, data: { numeric: true} %>
+        </div>
+
+        <% unit_count = params[:unit_count].to_i %>
+        <% if unit_count > 0 %>
+        <div>
+            <label>Units:</label>
+            <br>
+            <div class="unit-container">
+                <% unit_count.times do |i| %>
+                <%= text_field_tag "units[#{i}][unit_number]", nil %>
+                <br>
+                <% end %>
+            </div>
+        </div>
+        <% end %>
+
+        <br>
+        <%= form.submit "SAVE NEW PROPERTY" %>
+    <% end %>
+</div>
+<br>
+<%= link_to 'Back to Preview', import_path(@import) %>
