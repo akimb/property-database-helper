@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       post :create_property
 
     end
+    
+    resources :units, only: [:new, :create, :destroy]
+    # resources :units, only: [:new, :create, :edit, :update, :destroy]
   end
 
 end
