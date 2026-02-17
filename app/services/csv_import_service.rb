@@ -2,15 +2,20 @@ require "csv"
 
 class CsvImportService
   include TextCleaner
-  # initialize with raw CSV content and the Import record
-  # allows us to create ImportedProperty records immediately
+
   def initialize(raw_csv, import)
+    # ---------------------------------------------------------------------------------
+    # Initializes the raw CSV file and creates a new Import record
+    # Creates ImportedProperty records immediately.
+    # ---------------------------------------------------------------------------------
     @raw_csv = raw_csv
     @import = import
   end
 
   def call
-    
+    # ---------------------------------------------------------------------------------
+    # Extracts each row in the imported CSV file and creates a new data entry.
+    # ---------------------------------------------------------------------------------
 
     rows = CSV.parse(@raw_csv, headers: true)
     properties = {}
@@ -53,7 +58,6 @@ class CsvImportService
       prop_data[:units].each do |unit_number|
         imported_property.units.create!(
           unit_number: unit_number
-          # import_id: @import.id
         )
       end
     end
@@ -61,15 +65,10 @@ class CsvImportService
 
   private
 
-  # def clean_information(word, up = false) # removes special characters and optionally uppercases
-  #   return nil if word.nil?
-
-  #   cleaned = word.gsub(/[^A-Za-z0-9\s]/, '')
-  #   up ? cleaned.upcase : cleaned
-  # end
-
-  # make this a class method
-  def self.valid_zip?(zip_prefix, check_state) # validate if zip code prefix matches the given state
+  def self.valid_zip?(zip_prefix, check_state)
+    # ---------------------------------------------------------------------------------
+    # Validates if the entered zip code prefix matches that of the state.
+    # ---------------------------------------------------------------------------------
     return false if check_state.nil?
 
     prefix = ZIP_PREFIXES[check_state.upcase]
