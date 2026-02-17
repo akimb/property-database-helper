@@ -4,11 +4,17 @@ class UnitsController < ApplicationController
   before_action :set_unit, only: [:destroy]
   
   def new
+    # ---------------------------------------------------------------------------------
+    # Initializes a new unit.
+    # ---------------------------------------------------------------------------------
     @imported_property = @import.imported_properties.find(params[:imported_property_id])
     @unit = @imported_property.units.build
   end
 
   def create
+    # ---------------------------------------------------------------------------------
+    # Creates a new unit.
+    # ---------------------------------------------------------------------------------
     @imported_property = @import.imported_properties.find(params[:imported_property_id])
     @unit = @imported_property.units.build(unit_params)
     @unit.import = @import
@@ -21,7 +27,9 @@ class UnitsController < ApplicationController
   end
 
   def destroy
-    # import = @unit.import
+    # ---------------------------------------------------------------------------------
+    # Deletes a unit.
+    # ---------------------------------------------------------------------------------
     property_name = @unit.imported_property.name
     @unit.destroy
     redirect_to edit_import_path(@import, property_name: property_name), notice: 'Units deleted successfully.'
