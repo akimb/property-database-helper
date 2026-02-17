@@ -1,6 +1,7 @@
 <!-- @property uses Imported Property, not a hash -->
 <h1>Editing Property: <%= @property.name %></h1>
 
+<%# Allows addition of extra units. %>
 <div>
     <%= form_with url: edit_import_path(@import), method: :get do |f| %>
         <%= f.hidden_field :property_name, value: params[:property_name] %>
