@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_15_001055) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_17_030414) do
   create_table "imported_properties", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "city"
     t.datetime "created_at", null: false
@@ -35,9 +35,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_15_001055) do
 
   create_table "properties", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "address"
+    t.string "city"
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.string "state"
+    t.string "street_address"
     t.datetime "updated_at", null: false
+    t.string "zip_code"
     t.index ["name"], name: "index_properties_on_name", unique: true
   end
 

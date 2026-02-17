@@ -24,6 +24,11 @@
   </head>
 
   <body>
+    <% if flash[:alert] %>
+      <div style="color: red; padding: 10px; background: #ffe6e6; margin: 10px;">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
