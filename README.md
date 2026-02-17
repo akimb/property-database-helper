@@ -35,11 +35,11 @@ I think the tradeoffs go hand in hand with the assumptions, but for brevity I wi
 * I wanted to improve the look of this website as somebody who loves beautiful websites, but alas I ran out of time :(
 * Although I think the way I handled doing CRUD operations on Units was the 'Ruby way of doing it', it may not be the most easily extensible. For instance if the Units needed to have parameters like bedrooms, bathrooms, square footage, etc, I may have to generate a new migration file to include these parameters, then rework the UI to include each Units' parameters.
 * Deleting units was a beast of an issue to figure out. Not only was I unfamiliar with the way deletions work in HTML, but I had a difficult time using buttons and putting said buttons next to my text field tags to make the UI intuitive. I went from populating each unit's delete button BELOW its scroll container:
-  -----------
+  +---------+
   | 101     |
   | 102     |
   | 103     |
-  -----------
+  +---------+
   Delete 101
   Delete 102
   Delete 103
