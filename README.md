@@ -63,9 +63,16 @@ There are a lot of things I thought to include! I instinctually had some things 
 * A search bar to look up a certain property name.
 * Aforementioned lookup table to associate a state with its respective cities to eliminate the need for typing the city out.
 * Spellchecker to ensure that words like 'apartments' wouldn't be spelled with typos.
-* Maybe a predictive warner that sees words like 'apartments' and if it notices no units, asks the user if they're sure the apartment has no associated units. 
+* Maybe a predictive warner that sees words like 'apartments' and if it notices no units, asks the user if they're sure the apartment has no associated units.
+* Automatic sorting of units upon updating.
 
+## Final Thoughts
+Handling vague requests is something that must always be considered. Obviously, if this were a real customer, I would be checking in with them to make sure that what I had in mind is on track with their expectations. In lieu of this, though, I did my best with the given instructions and considering how it would feel from the perspective of a user who has no other goal than to just edit some information and go. Some questions I would have asked include:
+* What are the most important aspects to you?
+* Are you considering expanding the information for things like per-unit information, i.e. square footage?
+* Does this need to be updated in real time, for instance if you were to lease a property out to somebody?
 
+In any case, this was a very nice challenge. I enjoyed thinking through this process and how it may relate to Payscore's processes. If you have any further questions, please do not hesitate to ask. I will be linking an unlisted YouTube video soon to show you a video of how to use this.
 
 
 
