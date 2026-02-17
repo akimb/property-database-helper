@@ -11,6 +11,13 @@ class ImportsController < ApplicationController
     # ImportProperty for each row. 
     # ---------------------------------------------------------------------------------
     uploaded_file = params[:file]
+    allowed_extensions = %w[.csv .xlsx]
+    file_extension = File.extname(uploaded_file.original_filename).downcase
+    
+    unless allowed_extensions.include?(file_extension)
+      flash[:alert] = "Invalid file type. Please upload a .csv or .xlsx file."
+      redirect_to root_path and return
+    end
     import = Import.create!(
       filename: uploaded_file.original_filename,
       raw_csv: uploaded_file.read, # keep original csv if desired
