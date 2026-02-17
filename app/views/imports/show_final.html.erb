@@ -1,0 +1,29 @@
+<h1>Final Review</h1>
+<p>You are about to finalize your property list.</p>
+
+<div class="scrollable-container">
+    <% @import.imported_properties.each do |p| %>
+        <h3><%= p.name %></h3>
+        <%= p.street_address %>
+        <br>
+        <%= p.city %>
+        <br>
+        <%= p.state %>
+        <br>
+        <%= p.zip_code %>
+        <br>
+         <label>Units:</label>
+         <% if p.units.any? %>
+            <% p.units.each do |unit| %>
+            <div>* <%= unit.unit_number %></div>
+            <% end %>
+        <% else %>
+            <div>N/A</div>
+        <% end %>
+        <hr>
+    <% end %>
+</div>
+
+<%= button_to "Confirm Submission", confirm_import_path(@import), method: :post %>
+<br><br>
+<%= link_to "Back to Preview", import_path(@import) %>
