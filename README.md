@@ -37,7 +37,9 @@ I think the tradeoffs go hand in hand with the assumptions, but for brevity I wi
 * Deleting units was a beast of an issue to figure out. Not only was I unfamiliar with the way deletions work in HTML, but I had a difficult time using buttons and putting said buttons next to my text field tags to make the UI intuitive. I went from populating each unit's delete button BELOW its scroll container:
   +---------+
   | 101     |
+  +---------+
   | 102     |
+  +---------+
   | 103     |
   +---------+
   Delete 101
