@@ -44,7 +44,7 @@ I think the tradeoffs go hand in hand with the assumptions, but for brevity I wi
   Delete 102
   Delete 103
 
-  to eventually settling with using checkboxes and a small prompt above the scroll container to say "Hey, if you want to delete a unit, check the ones you want gone and it will delete upon saving". This is not the most user friendly option but it is the one that ended up working fine enough for me. I would love to revisit a better way of doing this in the future. 
+to eventually settling with using checkboxes and a small prompt above the scroll container to say "Hey, if you want to delete a unit, check the ones you want gone and it will delete upon saving". This is not the most user friendly option but it is the one that ended up working fine enough for me. I would love to revisit a better way of doing this in the future. 
   
 ## Identifying Duplicate Properties
 This was a great problem to solve! Thinking about how to handle duplicate properties made me really scratch my head. Initially, I was thinking about just having the duplicate properties show up in the preview and have a banner warning that let the user know that there was a duplicate property. This would have been achieved by pulling from the imported properties table and finding that "hey, these two strings match up, so therefore they are duplicates". However, (in the assumptions ;) ) I figured that the customer would want duplicates to be handled automatically. In my CSV Parser logic, I made it so if the property's unique identifier (its name) was detected twice, that information would be thrown out. 
