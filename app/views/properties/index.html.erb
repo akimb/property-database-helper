@@ -1,0 +1,32 @@
+<h1>Finalized Properties</h1>
+
+<div class="scrollable-container">
+    <% if @properties.any? %>
+        <% @properties.each do |p| %>
+            <h3><%= p.name %></h3>
+            <%= p.street_address %>
+            <br>
+            <%= p.city %>
+            <br>
+            <%= p.state %>
+            <br>
+            <%= p.zip_code %>
+            <br>
+            <label>Units:</label>
+            <% if p.units.any? %>
+                <% p.units.each do |unit| %>
+                <div>* <%= unit.unit_number %></div>
+                <% end %>
+            <% else %>
+                <div>N/A</div>
+            <% end %>
+            <hr>
+        <% end %>
+    <% end %>
+</div>
+
+<%= button_to 'Delete all data', destroy_all_properties_path, method: :delete %>
+<br><br>
+<%= link_to 'Upload new CSV', root_path %>
+<br><br>
+<%= link_to 'Export to CSV', export_properties_path(format: :csv) %>
