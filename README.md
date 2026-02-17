@@ -2,7 +2,7 @@
 
 Welcome to my property database project! 
 
-Video walkthrough: [https://youtu.be/Qat6l97_RiM](https://youtu.be/Qat6l97_RiM)
+Video walkthrough: [https://youtu.be/paa3fmOvWaY](https://youtu.be/paa3fmOvWaY)
 
 ## Here's how to run this application locally:
 1. Download and clone this repository to your machine.
