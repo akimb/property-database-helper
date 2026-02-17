@@ -1,21 +1,21 @@
 # README
 
-talk about:
-- wanted to create a rudimentary properties model as well as a unit model
-- learned about has_many and belongs_to
-- created a migration file that would take care of csv imports
-- kept temporary files in consideration - wanted a way to make edits before sending off for final export, handled via enum
-- created csv parser service that would handle reading csv raw text data and convert to a property object
-- had a lot of inefficiencies that led to many obstacles that i was able to foresee
-- i.e. committing csv as raw text and did not store data in mysql as desired, causing clunky behavior
-- refactored controllers to fit this need better; created importedproperties controller that would also be the intermediate between final property export
-- made some other improvements, like using partials to call each property rather than have the whole thing display in the show page
-- tackled units next - originally handled as hash, then json, but the issue was that any updates, deletions or changes to unit(s) would require having to reparse the entire array.
-- also couldn't use ID to query directly. also uniqueness couldn't be enforced
-- created dropdown on state to ensure that people can never query wrong for state
-- if had more time, would want to implement spellchecker for property name and street. also, would have liked to use lookup tables to get state first, then a dropdown for city to eliminate even more mistake chances
-- would be nice to sort newly added units
-- deleting units were hard. doing units in every sense was hard. didn't know how DELETE was handled with HTML, so had to download turbo-rails, then realized that it's not well supported in rails 8, then figured out that link_to only handles GET, POST, and PATCH, etc
-- have to figure out how to only temporarily delete units if not saved -- potentially hide the unit from view in edit and if it's hidden + save page, then unit gets deleted?
-- got resolved by utilizing checkboxes and deleting upon save, much better solution. cleaner too
-- 
+Welcome to my property database project! 
+
+## Here's how to run this application locally:
+1. Download and clone this repository to your machine.
+2. Store it in a folder path of your choice.
+3. If you're on Windows and have not yet downloaded [WSL for Windows](https://learn.microsoft.com/en-us/windows/wsl/install), please do so. Otherwise, in your terminal, run `wsl`.
+4. If you're on Linux, use your preferred flavor.
+5. `cd` into your file path. It should end in `/property-database-helper` or `\property-database-helper`.
+6. Run the command `rails s` or `rails server` to begin the server.
+7. On your web browser of choice, type in [http://localhost:3000](http://localhost:3000) and wait for the rails server to finish rendering the page.
+8. Once you see the website, upload the Properties CSV and click 'Upload CSV'.
+9. Once uploaded, you'll see a view of all of the properties associated with the CSV as well as the other information, like city, zipcode, and units for instance.
+10. Upon imports, you may see that some properties have warnings next to them. The property database will run through validators and give warnings based on if something is typed incorrectly.
+11. You may edit a property below its description. If you wanted to change the address, city, state, zipcode, and add/edit/delete units, that is all processed in the edit view. Should you wish to delete a unit, simply select the checkbox next to it to queue it for deletion. Upon clicking 'Save Changes', the units will be deleted.  
+12. You may also add a property with the options to add units, as well as type in name and all other information. Accurate information is required when adding in a new property, the validator will not pass the submit form.
+13. Lastly, you may delete properties should you need to.
+14. Once you are satisfied and fixed any errors, you are able to 'Submit Final' and get a preview of the final properties before you 'Confirm Submission'. From there you will have a finalized version of the property database in which you can also export as a new CSV.
+
+## 
