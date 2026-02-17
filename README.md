@@ -34,7 +34,18 @@ I think the tradeoffs go hand in hand with the assumptions, but for brevity I wi
 * On the flip side, creating dropdown menus have the potential for accidentally setting a property with the wrong state. I've done it myself, where in a rush to add a property for testing I left the state as 'Alaska' as it was the first option in the dropdown. One way I could have mitigated this was to add a 'blank' state, where if my property model detected that the state was in 'blank', it would throw an error at me.
 * I wanted to improve the look of this website as somebody who loves beautiful websites, but alas I ran out of time :(
 * Although I think the way I handled doing CRUD operations on Units was the 'Ruby way of doing it', it may not be the most easily extensible. For instance if the Units needed to have parameters like bedrooms, bathrooms, square footage, etc, I may have to generate a new migration file to include these parameters, then rework the UI to include each Units' parameters.
+* Deleting units was a beast of an issue to figure out. Not only was I unfamiliar with the way deletions work in HTML, but I had a difficult time using buttons and putting said buttons next to my text field tags to make the UI intuitive. I went from populating each unit's delete button BELOW its scroll container:
+  -----------
+  | 101     |
+  | 102     |
+  | 103     |
+  -----------
+  Delete 101
+  Delete 102
+  Delete 103
 
+  to eventually settling with using checkboxes and a small prompt above the scroll container to say "Hey, if you want to delete a unit, check the ones you want gone and it will delete upon saving". This is not the most user friendly option but it is the one that ended up working fine enough for me. I would love to revisit a better way of doing this in the future. 
+  
 ## Identifying Duplicate Properties
 This was a great problem to solve! Thinking about how to handle duplicate properties made me really scratch my head. Initially, I was thinking about just having the duplicate properties show up in the preview and have a banner warning that let the user know that there was a duplicate property. This would have been achieved by pulling from the imported properties table and finding that "hey, these two strings match up, so therefore they are duplicates". However, (in the assumptions ;) ) I figured that the customer would want duplicates to be handled automatically. In my CSV Parser logic, I made it so if the property's unique identifier (its name) was detected twice, that information would be thrown out. 
 
@@ -43,3 +54,20 @@ If the user wanted to add a new property and it happened to be a duplicate prope
 One edge case I ran into that I eventually turned into an assumption was when I uploaded a new CSV after finalizing a previous one - if I tried to confirm my submission, while duplicate properties were still rejected, any new information was unable to be entered. For instance, the 'Avenue Apartments' has a total of 7 Units in the CSV. If I had created a new CSV with all of the same information as the previous 'Avenue Apartments', and simply added a couple of new rows with new units, the validator would simply not allow this to be submitted. Hence, I made the assumption that a user who finalizes a Property is 100% confident that they entered everything correctly after reviewing and updating information. After all, this website allows you to make changes to the property data before you finalize it.
 
 ## Improvements to Make
+There are a lot of things I thought to include! I instinctually had some things planned when creating this website. In no particular order, here are some improvements that I think would be great to have:
+* Banners that show if duplicate properties are detected.
+* Lazy loading properties, especially since I anticipate the CSV files would be massive. Rendering properties as they come in would save a lot of performance.
+* Filters for searching specific categories (i.e. I want all properties that are in CONNECTICUT.)
+* A search bar to look up a certain property name.
+* Aforementioned lookup table to associate a state with its respective cities to eliminate the need for typing the city out.
+* Spellchecker to ensure that words like 'apartments' wouldn't be spelled with typos.
+* Maybe a predictive warner that sees words like 'apartments' and if it notices no units, asks the user if they're sure the apartment has no associated units. 
+
+
+
+
+
+
+
+
+
