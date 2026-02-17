@@ -1,14 +1,23 @@
-<% @property.units.each do |unit| %>
-    <%# important to note the structure of the HTML hash, which is different from the unit controller I set up. no way to get around this. %>
-    <%= text_field_tag "units[#{unit.id}][unit_number]", unit.unit_number %>
-    <%= check_box_tag "delete_units[]", unit.id %> 
-    <br>
+<% has_existing_units = @property.units.any? %>
+<% has_new_units = params[:unit_count].to_i > 0 %>
+
+<% if has_existing_units || has_new_units %>
+    <% if has_existing_units %>
+        <% @property.units.each do |unit| %>
+            <%# important to note the structure of the HTML hash, which is different from the unit controller I set up. no way to get around this. %>
+            <%= text_field_tag "units[#{unit.id}][unit_number]", unit.unit_number %>
+            <label>Delete? <%= check_box_tag "delete_units[]", unit.id %></label>
+            <br>
+        <% end %>
+    <% end %>
+
+    <% if has_new_units %>
+        <% params[:unit_count].to_i.times do |i| %>
+            <%= text_field_tag "units[new_#{i}][unit_number]", nil %>
+            <br>
+        <% end %>
+    <% end %>
+<% else %>
+  <p>No units listed.</p>
 <% end %>
 
-<% unit_count = params[:unit_count].to_i %>
-<% if unit_count > 0 %>
-    <% unit_count.times do |i| %>
-        <%= text_field_tag "units[new_#{i}][unit_number]", nil %>
-        <br>
-    <% end %>
-<% end %>
