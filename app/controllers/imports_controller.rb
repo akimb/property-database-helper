@@ -28,34 +28,107 @@ class ImportsController < ApplicationController
     @import = Import.find(params[:id])
   end
 
+  def confirm
+    # ---------------------------------------------------------------------------------
+    # Validates all properties to prepare for final submission.
+    # ---------------------------------------------------------------------------------
+    @import = Import.find(params[:id])
+
+    begin 
+      ActiveRecord::Base.transaction do
+        @import.imported_properties.each do |imported_property|
+          property = Property.create!(
+            name: imported_property.name,
+            street_address: imported_property.street_address,
+            city: imported_property.city,
+            state: imported_property.state,
+            zip_code: imported_property.zip_code
+          )
+
+          imported_property.units.each do |imported_unit|
+            property.units.create!(
+              unit_number: imported_unit.unit_number
+            )
+          end
+        end
+        @import.update!(status: "completed")
+      end
+
+      redirect_to properties_path, notice: "Import completed successfully."
+    rescue ActiveRecord::RecordInvalid => e
+      flash[:alert] = "Failed to finalize import: #{e.record.errors.full_messages.join(', ')}"
+      redirect_to show_final_import_path(@import)
+    end
+  end
+
+  def show_final
+    @import = Import.find(params[:id])
+
+    errors = []
+  
+    @import.imported_properties.each do |property|
+      unless property.valid?
+        errors << "Property '#{property.name}': #{property.errors.full_messages.join(', ')}"
+      end
+      
+      unless property.zip_valid
+        errors << "Property '#{property.name}': zip code does not match state #{property.state}"
+      end
+      
+      property.units.each do |unit|
+        unless unit.valid?
+          errors << "Unit #{unit.unit_number} in '#{property.name}': #{unit.errors.full_messages.join(', ')}"
+        end
+      end
+    end
+
+    if errors.any?
+      flash[:alert] = errors.join("; ")
+      redirect_to import_path(@import) and return
+    end
+  end
 
   def new_property
+    # ---------------------------------------------------------------------------------
+    # New property
+    # ---------------------------------------------------------------------------------
     @import = Import.find(params[:id])
     @property = @import.imported_properties.new
   end
 
   def create_property
+    # ---------------------------------------------------------------------------------
+    # Creates a new property, and verifies that the zip code is correct
+    # based on state dropdown.
+    # Uses ActiveRecord transactions to handle errors, i.e. duplicate property names
+    # or duplicate units.
+    # ---------------------------------------------------------------------------------
     @import = Import.find(params[:id])
     @property = @import.imported_properties.new(imported_property_params)
     @property.zip_valid = CsvImportService.valid_zip?(params[:zip_code], params[:state])
-        
-    if @property.save
-      
-      @property.update!(
+    
+    begin
+      ActiveRecord::Base.transaction do
+        @property.save!
+
+        @property.update!(
         name: clean_information(params[:name], true),
         street_address: clean_information(params[:street_address], true),
         city: clean_information(params[:city], true)
-      )
-      if params[:units].present?
-        params[:units].each do |_, unit_params|
-          unit_number = unit_params[:unit_number].strip
-          @property.units.create!(unit_number: unit_number) unless unit_number.empty?
+        )
+
+        if params[:units].present?
+          params[:units].each do |_, unit_params|
+            unit_number = unit_params[:unit_number].strip
+            @property.units.create!(unit_number: unit_number) unless unit_number.empty?
+          end
         end
       end
+        redirect_to import_path(@import)
 
-      redirect_to import_path(@import)
-    else
-      render :new_property
+    rescue ActiveRecord::RecordInvalid => e
+      flash.now[:alert] = e.record.errors.full_messages.join(", ")
+      render :new_property, status: :unprocessable_entity
     end
   end
   
@@ -72,46 +145,55 @@ class ImportsController < ApplicationController
     # method: :patch method recognized by Rails.
     # The specific property is found, then uses the update! method via Rails
     # to persist changes to the database.
+    # Uses ActiveRecord transactions to handle errors, i.e. duplicate property names
+    # or duplicate units. 
     # ---------------------------------------------------------------------------------
-    # Rails.logger.debug params.inspect
-    # render plain: params.inspect
-
     @import = Import.find(params[:id])
     @property = @import.imported_properties.find_by!(name: params[:property_name])
-
-    if params[:delete_units].present?
-      params[:delete_units].each do |unit_id|
-        unit = Unit.find_by(id: unit_id)
-        unit&.destroy
-      end
-    end
-
-    @property.update!(
-      name: clean_information(params[:name], true),
-      street_address: clean_information(params[:street_address], true),
-      city: clean_information(params[:city], true),
-      state: clean_information(params[:state], true),
-      zip_code: params[:zip_code],
-      zip_valid: CsvImportService.valid_zip?(params[:zip_code], params[:state])
-    )
     
-    if params[:units].present?
-      deleted_ids = params[:delete_units]&.map(&:to_s) || []
-      params[:units].each do |id, unit_params|
-        next if deleted_ids.include?(id.to_s)
-        unit_number = unit_params[:unit_number].to_s.strip
-                
-        next if unit_number.blank?
+    begin
+      ActiveRecord::Base.transaction do
+        if params[:delete_units].present?
+          params[:delete_units].each do |unit_id|
+            unit = Unit.find_by(id: unit_id)
+            unit&.destroy
+          end
+        end
+        
+        # using ! will raise an error if found, then use ActiveRecord to handle found error
+        @property.update!(
 
-        if id.start_with?("new_")
-          @property.units.create!(unit_number: unit_number)
-        else
-          unit = Unit.find_by(id: id)
-          unit.update!(unit_number: unit_number)
+          name: clean_information(params[:name], true),
+          street_address: clean_information(params[:street_address], true),
+          city: clean_information(params[:city], true),
+          state: clean_information(params[:state], true),
+          zip_code: params[:zip_code],
+          zip_valid: CsvImportService.valid_zip?(params[:zip_code], params[:state])
+        )
+        
+        if params[:units].present?
+          deleted_ids = params[:delete_units]&.map(&:to_s) || []
+          params[:units].each do |id, unit_params|
+            next if deleted_ids.include?(id.to_s)
+            unit_number = unit_params[:unit_number].to_s.strip
+                    
+            next if unit_number.blank?
+
+            if id.start_with?("new_")
+              @property.units.create!(unit_number: unit_number)
+            else
+              unit = Unit.find_by(id: id)
+              unit.update!(unit_number: unit_number)
+            end
+          end
         end
       end
+
+        redirect_to import_path(@import)
+    rescue ActiveRecord::RecordInvalid => e
+      flash.now[:alert] = e.record.errors.full_messages.join(", ")
+      render :edit, status: :unprocessable_entity      
     end
-    redirect_to import_path(@import)
   end
 
   def destroy
@@ -130,7 +212,6 @@ class ImportsController < ApplicationController
   private
 
   def imported_property_params
-    # params.require(:imported_property).permit(:name, :street_address, :city, :state, :zip_code, units: [])
     params.permit(:name, :street_address, :city, :state, :zip_code)
   end
 
