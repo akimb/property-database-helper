@@ -1,6 +1,7 @@
 <h1>Property Preview</h1>
 <p>File: <%= @import.filename %></p>
 
+<%# Calls property card partial to render all properties. %>
 <div class="scrollable-container">
     <% @import.imported_properties.each do |property| %>
         <%= render "property_card", property: property, import: @import %>
@@ -10,4 +11,6 @@
 <hr>
 <%= link_to 'Add Property', new_property_import_path(@import) %>
 <br><br>
-<%= link_to 'Submit Final', nil %>
+<%= link_to 'Back to main page', root_path %>
+<br><br>
+<%= link_to 'Submit Final', show_final_import_path(@import) %>
