@@ -156,7 +156,8 @@ class ImportsController < ApplicationController
     # or duplicate units. 
     # ---------------------------------------------------------------------------------
     @import = Import.find(params[:id])
-    @property = @import.imported_properties.find_by!(name: params[:property_name])
+    property_name = params[:original_property_name].presence || params[:property_name]
+    @property = @import.imported_properties.find_by!(name: property_name)
     
     begin
       ActiveRecord::Base.transaction do

@@ -13,6 +13,7 @@
 <div>
     <%= form_with url: import_path(@import), method: :patch do |form| %>
         <%= form.hidden_field :property_name, value: @property.name %>
+        <%= form.hidden_field :original_property_name, value: params[:property_name] || @property.name %>
         <div>
             <%= form.label :name, 'Property Name:' %>
             <%= form.text_field :name, value: @property.name %>
